@@ -422,9 +422,10 @@ const initHeroAnimation = () => {
 const textDecryptAnimation = (element, finalText) => {
   if (!element) return;
 
-  let duration = 2.5; // Увеличенная продолжительность анимации (было 1.5)
-  let interval = 45; // Увеличенный интервал обновления символов (было 30)
-  let steps = duration * 1000 / interval; // количество шагов анимации
+  // Увеличим длительность и замедлим обновление
+  let duration = 3; // Увеличено с 2.5 до 3 секунд
+  let interval = 60; // Увеличено с 45 до 60мс для более плавной анимации
+  let steps = duration * 1000 / interval;
   let currentStep = 0;
 
   // Создаем случайный текст такой же длины
@@ -445,18 +446,23 @@ const textDecryptAnimation = (element, finalText) => {
     let result = '';
 
     for (let i = 0; i < finalText.length; i++) {
-      // Вероятность того, что символ "дешифрован" на этом шаге
+      // Более плавная вероятностная модель
       let progress = currentStep / steps;
 
-      // Чем дальше в тексте, тем позже дешифруем
-      let charProgress = progress - (i * 0.08); // Увеличено замедление для символов в конце
+      // Более плавное затухание для символов в конце строки
+      let charProgress = progress - (i * 0.05); // Уменьшено с 0.08 до 0.05
 
-      if (charProgress >= Math.random() || charProgress > 0.9) {
+      // Добавим немного случайности для "органичности"
+      if (charProgress >= 0.75 || (charProgress >= 0.4 && Math.random() > 0.85)) {
         // Символ дешифрован
         result += finalText[i];
       } else {
-        // Символ еще "шифрован"
-        result += decryptChars.charAt(Math.floor(Math.random() * decryptChars.length));
+        // Символ еще "шифрован" - иногда оставляем тот же символ для большей стабильности
+        if (Math.random() > 0.3 && element.textContent[i]) {
+          result += element.textContent[i];
+        } else {
+          result += decryptChars.charAt(Math.floor(Math.random() * decryptChars.length));
+        }
       }
     }
 
@@ -641,7 +647,7 @@ const initScrollAnimations = () => {
     });
   }
 
-  // Анимация секции услуг
+  // Анимация секции услуг - ИСПРАВЛЕННАЯ ЧАСТЬ
   if (servicesSectionRef.value) {
     ScrollTrigger.create({
       trigger: servicesSectionRef.value,
@@ -653,11 +659,24 @@ const initScrollAnimations = () => {
           duration: 0.8
         });
 
+        // Сначала установим все карточки в видимое состояние
+        gsap.set(servicesSectionRef.value.querySelectorAll('.service-card'), {
+          opacity: 1,
+          y: 0
+        });
+
+        // Затем анимируем их появление (но без stagger, который вызывает проблему)
         gsap.from(servicesSectionRef.value.querySelectorAll('.service-card'), {
-          y: 50,
+          y: 30,
           opacity: 0,
-          stagger: 0.15,
-          duration: 0.8
+          duration: 0.5,
+          ease: 'power2.out',
+          onComplete: () => {
+            // Убедимся, что все карточки видимы после анимации
+            gsap.set(servicesSectionRef.value.querySelectorAll('.service-card'), {
+              clearProps: 'opacity,transform'
+            });
+          }
         });
       }
     });
@@ -869,6 +888,17 @@ const scrollToSection = (sectionId) => {
 
     // Устанавливаем активную секцию
     activeSection.value = sectionId;
+
+    // ДОБАВЛЕНО: Если переходим к секции услуг, убедимся, что все карточки видны
+    if (sectionId === 'services' && servicesSectionRef.value) {
+      gsap.to(servicesSectionRef.value.querySelectorAll('.service-card'), {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        overwrite: true,
+        ease: 'power2.out'
+      });
+    }
   }
 };
 
@@ -885,6 +915,17 @@ onMounted(() => {
 
   // Инициализация анимаций при скролле
   initScrollAnimations();
+
+  // ДОБАВЛЕНО: Убедимся, что все карточки услуг будут видны
+  setTimeout(() => {
+    if (servicesSectionRef.value) {
+      gsap.set(servicesSectionRef.value.querySelectorAll('.service-card'), {
+        opacity: 1,
+        y: 0,
+        clearProps: 'transform'
+      });
+    }
+  }, 1000);
 });
 
 onBeforeUnmount(() => {
