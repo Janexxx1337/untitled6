@@ -1,0 +1,95 @@
+// src/assets/styles/sections/_contact.scss
+@import '../variables';
+
+.contact-section {
+  background-color: $color-background;
+
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+
+    @media (max-width: $breakpoint-desktop) {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .contact-details {
+    margin-top: 3rem;
+  }
+
+  .contact-item {
+    margin-bottom: 2rem;
+  }
+
+  .contact-label {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-value {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: $color-text;
+    text-decoration: none;
+  }
+
+  .contact-form-wrapper {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    padding: 3rem;
+
+    @media (max-width: $breakpoint-mobile) {
+      padding: 1.5rem;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, $color-accent, $color-accent-secondary);
+      transition: width 0.3s ease;
+    }
+
+    &:focus-within::after {
+      width: 100%;
+    }
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: $color-text;
+    font-family: $font-primary;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

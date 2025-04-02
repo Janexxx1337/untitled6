@@ -1,0 +1,22 @@
+// src/assets/styles/_variables.scss
+// Цвета
+$color-background: #0A0A0A;
+$color-text: #FFFFFF;
+$color-accent: #4A00E0;
+$color-accent-secondary: #8E2DE2;
+$color-accent-tertiary: #2DE28E;
+
+// Шрифты
+$font-primary: 'Manrope', sans-serif;
+$font-display: 'Space Grotesk', sans-serif;
+
+// Брейкпоинты
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1200px;
+
+// Z-индексы
+$z-index-preloader: 1000;
+$z-index-cursor: 9999;
+$z-index-header: 100;
+$z-index-menu: 99;

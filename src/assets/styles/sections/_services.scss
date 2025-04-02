@@ -1,0 +1,70 @@
+// src/assets/styles/sections/_services.scss
+@import '../variables';
+
+.services-section {
+  background-color: $color-background;
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+
+    @media (max-width: $breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .service-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      transform: translateY(-10px);
+      border-color: rgba(255, 255, 255, 0.1);
+
+      .link-arrow {
+        transform: translateX(5px);
+      }
+    }
+  }
+
+  .service-number {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .service-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-family: $font-display;
+  }
+
+  .service-description {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+
+  .service-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .link-text {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .link-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+  }
+}

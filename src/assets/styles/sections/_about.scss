@@ -1,0 +1,52 @@
+// src/assets/styles/sections/_about.scss
+@import '../variables';
+
+.about-section {
+  background-color: $color-background;
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+
+    @media (max-width: $breakpoint-desktop) {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+
+    @media (max-width: $breakpoint-mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stat-item {
+    text-align: center;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .stat-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(45deg, #FFFFFF, #A0A0A0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .stat-label {
+    font-size: 1rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+  }
+}
