@@ -5,14 +5,13 @@
         :key="index"
         class="char-drum-container"
         :style="{
-        width: size === 'small' ? '0.55em' : '0.8em',
-        fontSize: size === 'small' ? '1em' : 'inherit'
-      }"
+          width: char.targetChar === ' ' ? '0.3em' : (size === 'small' ? '0.55em' : '0.8em'),
+          fontSize: size === 'small' ? '1em' : 'inherit'
+        }"
     >
       <div
-          ref="drums"
           class="char-drum"
-          :style="{ transform: `translateY(${char.position}px)` }"
+          :style="{ transform: `translateY(${char.position}em)` }"
       >
         <div
             v-for="(drumChar, drumIndex) in char.drumChars"
@@ -55,12 +54,14 @@ const props = defineProps({
 });
 
 const allChars = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ!@#$%^&*()_+-={}[]|:;"<>,.?/\\абвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789 —';
-const drums = ref([]);
 
 // Создаем реактивный массив для барабанов
 const characters = reactive([]);
 
 onMounted(() => {
+  // Очищаем массив на всякий случай
+  characters.splice(0, characters.length);
+
   // Инициализация барабанов для каждого символа
   for (let i = 0; i < props.text.length; i++) {
     const targetChar = props.text[i];
@@ -68,10 +69,15 @@ onMounted(() => {
     // Создаем массив символов для барабана
     const drumChars = [];
 
-    // Добавляем 15-25 случайных символов
-    const randomCount = 15 + Math.floor(Math.random() * 10);
+    // Добавляем 10-15 случайных символов (меньше для лучшего контроля)
+    const randomCount = 10 + Math.floor(Math.random() * 5);
     for (let j = 0; j < randomCount; j++) {
-      drumChars.push(allChars[Math.floor(Math.random() * allChars.length)]);
+      // Для пробелов добавляем только пробелы
+      if (targetChar === ' ') {
+        drumChars.push(' ');
+      } else {
+        drumChars.push(allChars[Math.floor(Math.random() * allChars.length)]);
+      }
     }
 
     // Добавляем целевой символ в конец
@@ -92,27 +98,31 @@ const startAnimation = () => {
   // Для каждого барабана с символами
   characters.forEach((char, index) => {
     // Рассчитываем задержку в зависимости от позиции символа
-    const delay = props.startDelay + index * 50;
+    const delay = props.startDelay + index * 40; // уменьшил для более быстрого старта
 
     // Рассчитываем позицию конечного символа (который нужно показать)
-    const finalPosition = -(char.drumChars.length - 1) * 100; // высота символа в процентах
+    const finalPosition = -(char.drumChars.length - 1);
 
     // Создаем промежуточную позицию для более реалистичной анимации
-    const intermediatePosition = finalPosition * 0.6;
+    const intermediatePosition = finalPosition * 0.7;
 
-    // Используем GSAP для плавной анимации
+    // Создаем таймлайн для каждого символа с нужной задержкой
     gsap.timeline({ delay: delay / 1000 })
-        // Быстро прокручиваем барабан вниз
+        // Быстрое прокручивание к промежуточной позиции
         .to(char, {
           position: intermediatePosition,
           duration: props.duration / 1000 * 0.6,
           ease: "power2.inOut"
         })
-        // Затем медленнее прокручиваем до финальной позиции
+        // Затем замедление до финальной позиции
         .to(char, {
           position: finalPosition,
           duration: props.duration / 1000 * 0.4,
-          ease: "power3.out"
+          ease: "power4.out", // изменил для лучшего эффекта замедления
+          onComplete: () => {
+            // Гарантируем, что барабан остановится точно на конечной позиции
+            char.position = finalPosition;
+          }
         });
   });
 };
@@ -141,12 +151,13 @@ defineExpose({
   height: 1em;
   overflow: hidden;
   position: relative;
+  text-align: center;
 }
 
 .char-drum {
   position: absolute;
   left: 0;
-  transition: transform 0.05s linear;
+  right: 0;
   will-change: transform;
 }
 
@@ -156,6 +167,8 @@ defineExpose({
   justify-content: center;
   align-items: center;
   font-family: 'Space Grotesk', sans-serif;
+  text-align: center;
+  overflow: hidden;
 }
 
 .accent-char {
