@@ -157,7 +157,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
 // Импорт компонентов секций
-import HeroSection from './components/HeroSection.vue';
+import HeroSection from './components/Hero/HeroSection.vue';
 import AboutSection from './components/AboutSection.vue';
 import ServicesSection from './components/ServicesSection.vue';
 import ProjectsSection from './components/ProjectsSection.vue';
@@ -518,12 +518,17 @@ const initScrollAnimations = () => {
           duration: 0.8
         });
 
+        // Modified animation for service cards
         gsap.from('#services .service-card', {
           y: 30,
           opacity: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out'
+          duration: 0.8,
+          stagger: 0.15, // Increased stagger time
+          ease: 'power2.out',
+          onComplete: () => {
+            // Ensure all cards are fully visible after animation
+            gsap.set('#services .service-card', { clearProps: "all" });
+          }
         });
       }
     });
